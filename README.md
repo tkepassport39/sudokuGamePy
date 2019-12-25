@@ -1,2 +1,2 @@
 # sudokuGamePy
-Sudoku game that resolves puzzles
+Sudoku game that solves puzzles
