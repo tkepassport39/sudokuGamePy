@@ -1,4 +1,3 @@
-#sudoku game
 '''
 Games Rules:
 
@@ -22,6 +21,8 @@ board = [
 
 '''
 
+import boardVisual
+
 # find empty spot and assign to l to be returned back to solve_game along with value "true". Meaning "true" there is a 0 value
 def find_empty_spots(grid, loc):
     for row in range(9):
@@ -32,12 +33,11 @@ def find_empty_spots(grid, loc):
                 return True
     return False
 
-# create rules into functions 
-
-def print_grid(arr): 
-	for i in range(9): 
-		for j in range(9): 
-			print(arr[i][j], end=" "),
+# print game table
+def print_table(grid): 
+	for x in range(9): 
+		for y in range(9): 
+			print(grid[x][y], end=" "),
 		print ('') 
 
 # check if the num exists in the row
@@ -62,12 +62,13 @@ def exist_in_sm_box(grid, row, col, num):
                 return True
     return False
 
-# is it safe to input num to row and col
+# is it safe to input num to row / col
 def is_spot_safe(grid, row, col, num):
 
     # check that num doesn't already exist in same row / col and 3x3 grid. all functions need to return false in order to pass
     return not exist_in_row(grid, row, num) and not exist_in_col(grid, col, num) and not exist_in_sm_box(grid, row - row%3, col - col%3, num)
 
+# the important function
 # use backtracking algorithm to try and solve the sudoku
 def solve_game(grid):
 
@@ -123,15 +124,6 @@ if __name__=="__main__":
     table = [[0 for x in range(9)] for y in range(9)]
 
     # add values for the game
-    '''table=[[3,1,0,5,0,8,4,0,0], 
-		  [5,2,0,0,0,0,0,0,0], 
-		  [0,8,7,0,0,0,0,3,1], 
-		  [0,0,3,0,1,0,0,8,0], 
-		  [9,0,0,8,6,3,0,0,5], 
-		  [0,5,0,0,9,0,6,0,0], 
-		  [1,3,0,0,0,0,2,5,0], 
-		  [0,0,0,0,0,0,0,7,4], 
-		  [0,0,5,2,0,6,3,0,0]]'''
 
     table=[[0,3,0,2,8,7,0,5,0], 
 		  [5,8,0,6,4,1,9,0,0], 
@@ -144,6 +136,6 @@ if __name__=="__main__":
 		  [0,5,0,3,1,4,0,9,0]]
 
     if(solve_game(table)):
-        print_grid(table)
+        print_table(table)
     else:
-        print ("No solution found")
+        print ("Something wrong - No solution found")
