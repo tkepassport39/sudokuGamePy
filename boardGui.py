@@ -1,4 +1,6 @@
 import pygame
+import sudoku
+import time
 
 pygame.font.init()
 
@@ -13,54 +15,30 @@ red = (255, 0, 0)
 width = 540
 height = 540
 
+table = [
+    [0,3,0,2,8,7,0,5,0], 
+    [5,8,0,6,4,1,9,0,0], 
+    [1,0,6,9,0,0,0,2,4], 
+    [2,0,0,0,6,0,3,0,8], 
+    [0,9,5,0,7,0,2,6,0], 
+    [8,0,4,0,3,0,0,0,9], 
+    [6,2,0,0,0,5,4,0,3], 
+    [0,0,3,8,2,6,0,1,5], 
+    [0,5,0,3,1,4,0,9,0]
+]
+
 class getTable:
 
-    table = [
-        [0,3,0,2,8,7,0,5,0], 
-        [5,8,0,6,4,1,9,0,0], 
-        [1,0,6,9,0,0,0,2,4], 
-        [2,0,0,0,6,0,3,0,8], 
-        [0,9,5,0,7,0,2,6,0], 
-        [8,0,4,0,3,0,0,0,9], 
-        [6,2,0,0,0,5,4,0,3], 
-        [0,0,3,8,2,6,0,1,5], 
-        [0,5,0,3,1,4,0,9,0]
-    ]
-
-    def __init__(self, row, col, width, height):
+    def __init__(self, row, col, width, height, table):
         # assign default param
         self.rows = row
         self.cols = col
         self.width = width
         self.height = height
         self.selected = None
+        self.emptySlots = [[]]
+        self.table = table
         self.cubes = [[Cube(self.table[i][j], i, j, width, height) for j in range(col)] for i in range(row)]
-        
-
-    def click(self, pos):
-        # make sure the click is within the game window
-        if pos[0] < self.width and pos[1] < self.height:
-            gap = self.width / 9
-            x = pos[0] // gap
-            y = pos[1] // gap
-            # debug what are the coordinates
-            #print("getTable : " + str(int(x)) + " , " + str(int(y)))
-            # return (row, col)
-            return (int(y), int(x))
-        else:
-            return None
-
-    def sketch(self, val):
-        row, col = self.selected
-        self.cubes[row][col].set_temp(val)
-
-    def select(self, row, col):
-        for i in range(self.rows):
-            for j in range(self.cols):
-                self.cubes[i][j].selected = False
-
-        self.cubes[row][col].selected = True
-        self.selected = (row, col)
 
     def draw(self, window):
         # draw the grid
@@ -80,6 +58,25 @@ class getTable:
             for j in range(self.cols):
                 # call draw from cube class
                 self.cubes[i][j].draw(window)
+
+
+    def select(self, row, col):
+
+        #print("inside select func"+ str(row) + " "+ str(col))
+        self.cubes[row][col].selected = True
+        self.selected = (row, col)
+
+    # used to create green squares around each empty slot
+    def find_emptySlots(self, grid):
+        for i in range(self.rows):
+            for j in range(self.cols):
+                if (grid[i][j] == 0):
+                    print("empty slot "+ str([i]) + " _ " + str([j]))
+                    print(" ")
+                    self.select(i, j)
+                    self.emptySlots += [[i,j]]
+        #print(self.emptySlots[2][0])
+
 
 class Cube:
     cols = 9
@@ -112,7 +109,7 @@ class Cube:
             window.blit(text, (x + (gap/2 - text.get_width()/2), y + (gap/2 - text.get_height()/2)))
 
         if self.selected:
-            pygame.draw.rect(window, red, (x, y, gap, gap), 3)
+            pygame.draw.rect(window, green, (x, y, gap, gap), 3)
 
 def redraw_game(win, board):
     win.fill(white)
@@ -122,36 +119,33 @@ def redraw_game(win, board):
 # main function where the magic happens
 def main():
     window = pygame.display.set_mode((width, height))
-    board = getTable(9, 9, width, height)
+    board = getTable(9, 9, width, height, table)
 
     pygame.display.set_caption("Sudoku Solver")
 
     keepRunning = True
 
-    while keepRunning:
+    #board.find_emptySlots(table)
 
+    if (sudoku.solve_game(table)):
+        print(table)
+        board = getTable(9, 9, width, height, table)
+    else:
+        print("something went wrong")
+
+
+    while keepRunning:
+        # allow user to close window to exit
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 keepRunning = False
 
-            # get mouse button action
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                # get mouse position
-                pos = pygame.mouse.get_pos()
-                #print("pos inside main : "+str(pos))
-                clickPos = board.click(pos)
-
-                if clickPos:
-                    board.select(clickPos[0], clickPos[1])
-
-        '''if getTable.selected:
-            # draw table with cube selected
-            getTable.sketch()
-        '''
 
         redraw_game(window, board)
+        #time.sleep(5)
+        #board = getTable(9, 9, width, height, table)
         pygame.display.update()
+    
 
-# call the game
 main()
 pygame.quit()

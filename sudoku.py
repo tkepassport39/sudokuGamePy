@@ -3,34 +3,32 @@ Games Rules:
 
 The goal is to assign numbers (from 1 to 9) in the empty cells so that every column, row, and subgrid (3x3) contains exactly one instance of the digits 1 to 9.
 
-Simple board game:
-
-board = [
-    . 3 . | 2 8 7 | . 5 .
-    5 8 . | 6 4 1 | 9 . .
-    1 . 6 | 9 . . | . 2 4
-    --------------------- 
-    2 . . | . 6 . | 3 . 8
-    . 9 5 | . . . | 2 6 .
-    8 . 4 | . 3 . | . . 9
-    ---------------------
-    6 2 . | . . 5 | 4 . 3
-    . . 3 | 8 2 6 | . 1 5
-    . 5 . | 3 1 4 | . 9 .
- ]
-
 '''
 
-import boardVisual
-
+# set the table 
+'''table = [
+    [0,3,0,2,8,7,0,5,0], 
+    [5,8,0,6,4,1,9,0,0], 
+    [1,0,6,9,0,0,0,2,4], 
+    [2,0,0,0,6,0,3,0,8], 
+    [0,9,5,0,7,0,2,6,0], 
+    [8,0,4,0,3,0,0,0,9], 
+    [6,2,0,0,0,5,4,0,3], 
+    [0,0,3,8,2,6,0,1,5], 
+    [0,5,0,3,1,4,0,9,0]
+]'''
+'''
+failedPos = [0][0]
+tempGoodPos = [0][0]
+'''
 # find empty spot and assign to l to be returned back to solve_game along with value "true". Meaning "true" there is a 0 value
-def find_empty_spots(grid, loc):
+def find_empty_spots(grid):
     for row in range(9):
         for col in range(9):
             if(grid[row][col] == 0):
-                loc[0] = row
-                loc[1] = col
-                return True
+                #loc[0] = row
+                #loc[1] = col
+                return (row, col)
     return False
 
 # print game table
@@ -68,21 +66,19 @@ def is_spot_safe(grid, row, col, num):
     # check that num doesn't already exist in same row / col and 3x3 grid. all functions need to return false in order to pass
     return not exist_in_row(grid, row, num) and not exist_in_col(grid, col, num) and not exist_in_sm_box(grid, row - row%3, col - col%3, num)
 
+
 # the important function
 # use backtracking algorithm to try and solve the sudoku
 def solve_game(grid):
 
-    # record row and col from find_empty_spots function
-    t = [0,0]
-
+    find = find_empty_spots(grid)
     # if no empty spots then we are done
-    if (not find_empty_spots(grid, t)):
+    if (not find):
+        #print_table(table)
         return True
+    else:
+        row, col = find
 
-    # assign the value to row and col from function above
-    row = t[0]
-    col = t[1]
-    #print(t)
     #print("this is the row: "+ str(row) + " this is the col "+ str(col))
 
     # look for digits between 1 and 9
@@ -93,11 +89,12 @@ def solve_game(grid):
 
             # temporarily assign num
             grid[row][col] = num
+            #tempGoodPos = [row][col]
             '''# debug
             print("***")
             print(str([row]) + " _ " + str([col]))
             print(num)
-
+            
             print(grid[row])
             '''
             # recursive. return true is success
@@ -111,31 +108,39 @@ def solve_game(grid):
 
             # if fails, unassign and try again
             #print("assigning 0 to: "+ str([row]) + " _ " + str([col]))
+            
             grid[row][col] = 0
 
     # trigger backtracking
     #print("false - backtracking")
     return False
 
+
+
 # if this code is being run directly it will call this main 
 if __name__=="__main__":
-
+    
+    print("executed when invoked directly")
     # create table for the game
     table = [[0 for x in range(9)] for y in range(9)]
 
     # add values for the game
-
-    table=[[0,3,0,2,8,7,0,5,0], 
-		  [5,8,0,6,4,1,9,0,0], 
-		  [1,0,6,9,0,0,0,2,4], 
-		  [2,0,0,0,6,0,3,0,8], 
-		  [0,9,5,0,7,0,2,6,0], 
-		  [8,0,4,0,3,0,0,0,9], 
-		  [6,2,0,0,0,5,4,0,3], 
-		  [0,0,3,8,2,6,0,1,5], 
-		  [0,5,0,3,1,4,0,9,0]]
+    table = [
+        [0,3,0,2,8,7,0,5,0], 
+        [5,8,0,6,4,1,9,0,0], 
+        [1,0,6,9,0,0,0,2,4], 
+        [2,0,0,0,6,0,3,0,8], 
+        [0,9,5,0,7,0,2,6,0], 
+        [8,0,4,0,3,0,0,0,9], 
+        [6,2,0,0,0,5,4,0,3], 
+        [0,0,3,8,2,6,0,1,5], 
+        [0,5,0,3,1,4,0,9,0]
+    ]
+     
 
     if(solve_game(table)):
         print_table(table)
     else:
         print ("Something wrong - No solution found")
+else:
+    print("executed when imported")
