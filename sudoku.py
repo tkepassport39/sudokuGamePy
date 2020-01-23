@@ -90,20 +90,9 @@ def solve_game(grid):
             # temporarily assign num
             grid[row][col] = num
             #tempGoodPos = [row][col]
-            '''# debug
-            print("***")
-            print(str([row]) + " _ " + str([col]))
-            print(num)
-            
-            print(grid[row])
-            '''
+
             # recursive. return true is success
             if(solve_game(grid)):
-                '''print("***")
-                print("true - inside if")
-                print(grid[row])
-                print("***")
-                '''
                 return True
 
             # if fails, unassign and try again
@@ -120,7 +109,7 @@ def solve_game(grid):
 # if this code is being run directly it will call this main 
 if __name__=="__main__":
     
-    print("executed when invoked directly")
+    #print("executed when invoked directly")
     # create table for the game
     table = [[0 for x in range(9)] for y in range(9)]
 

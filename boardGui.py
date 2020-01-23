@@ -1,6 +1,5 @@
 import pygame
 import sudoku
-import time
 
 pygame.font.init()
 
@@ -75,7 +74,7 @@ class getTable:
                     print(" ")
                     self.select(i, j)
                     self.emptySlots += [[i,j]]
-        #print(self.emptySlots[2][0])
+        
 
 
 class Cube:
@@ -119,7 +118,7 @@ def redraw_game(win, board):
 # main function where the magic happens
 def main():
     window = pygame.display.set_mode((width, height))
-    board = getTable(9, 9, width, height, table)
+    #board = getTable(9, 9, width, height, table)
 
     pygame.display.set_caption("Sudoku Solver")
 
@@ -128,7 +127,7 @@ def main():
     #board.find_emptySlots(table)
 
     if (sudoku.solve_game(table)):
-        print(table)
+        #print(table)
         board = getTable(9, 9, width, height, table)
     else:
         print("something went wrong")
