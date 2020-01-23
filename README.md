@@ -32,4 +32,5 @@ The sudoku table exists within this file. You may update the table to solve your
 Once executed, it will send the table to `sudoku.py` to solve it. Once it is solved, the full table is returned and displayed in a GUI. 
 
 Example below:
+
 ![BoardGui](./images/Sudoku_Solver_BoardGui.png)
