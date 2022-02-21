@@ -1,5 +1,4 @@
 import pygame
-import sudoku
 
 pygame.font.init()
 
@@ -9,10 +8,6 @@ white = (255, 255, 255)
 lightgrey = (200,200,200)
 green = (22, 165, 137)
 red = (255, 0, 0)
-
-# define window size 
-width = 540
-height = 540
 
 table = [
     [0,3,0,2,8,7,0,5,0], 
@@ -25,6 +20,82 @@ table = [
     [0,0,3,8,2,6,0,1,5], 
     [0,5,0,3,1,4,0,9,0]
 ]
+
+# find empty spot and assign to l to be returned back to solve_game along with value "true". Meaning "true" there is a 0 value
+def find_empty_spots(grid):
+    for row in range(9):
+        for col in range(9):
+            if(grid[row][col] == 0):
+                #loc[0] = row
+                #loc[1] = col
+                return (row, col)
+    return False
+
+# print game table
+def print_table(grid): 
+	for x in range(9): 
+		for y in range(9): 
+			print(grid[x][y], end=" "),
+		print ('') 
+
+# check if the num exists in the row
+def exist_in_row(grid, row, num):
+    for i in range(9):
+        if(grid[row][i] == num):
+            return True
+    return False
+
+# check if the num exists in the col
+def exist_in_col(grid, col, num):
+    for i in range(9):
+        if(grid[i][col] == num):
+            return True
+    return False
+
+# check if the num exists in the 3x3 grid
+def exist_in_sm_box(grid, row, col, num):
+    for i in range(3):
+        for x in range(3):
+            if(grid[i+row][x+col] == num):
+                return True
+    return False
+
+# is it safe to input num to row / col
+def is_spot_safe(grid, row, col, num):
+
+    # check that num doesn't already exist in same row / col and 3x3 grid. all functions need to return false in order to pass
+    return not exist_in_row(grid, row, num) and not exist_in_col(grid, col, num) and not exist_in_sm_box(grid, row - row%3, col - col%3, num)
+
+
+# the important function
+# use backtracking algorithm to try and solve the sudoku
+def solve_game(grid):
+
+    find = find_empty_spots(grid)
+    # if no empty spots then we are done
+    if (not find):
+        return True
+    else:
+        # get the position when you find a 0
+        row, col = find
+
+    # look for digits between 1 and 9
+    for num in range(1,10):
+        # check if number is promising
+        if(is_spot_safe(grid, row, col, num)):
+
+            # temporarily assign num
+            grid[row][col] = num
+            #print(grid[row][col])
+
+            # recursive. return true is success
+            if(solve_game(grid)):
+                return True
+
+            grid[row][col] = 0
+
+    return False
+
 
 class getTable:
 
@@ -115,18 +186,21 @@ def redraw_game(win, board):
     # draw grid
     board.draw(win)
 
-# main function where the magic happens
+
+######## main function where the magic happens ########
 def main():
+
+    # define window size 
+    width = 540
+    height = 540
+    
     window = pygame.display.set_mode((width, height))
-    #board = getTable(9, 9, width, height, table)
 
     pygame.display.set_caption("Sudoku Solver")
 
     keepRunning = True
 
-    #board.find_emptySlots(table)
-
-    if (sudoku.solve_game(table)):
+    if (solve_game(table)):
         #print(table)
         board = getTable(9, 9, width, height, table)
     else:
@@ -141,8 +215,6 @@ def main():
 
 
         redraw_game(window, board)
-        #time.sleep(5)
-        #board = getTable(9, 9, width, height, table)
         pygame.display.update()
     
 
