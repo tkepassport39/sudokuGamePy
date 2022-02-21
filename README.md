@@ -25,12 +25,22 @@ Once the table is complete, the outcome will be printed in the terminal. Such as
 
 ![sudoku_terminal](./images/Sudoku_Solver_sudoku_terminal.png)
 
-2. `BoardGui.py` - This code will help display the outcome of the sudoku game to a friendly GUI. I am using [Pygame](https://www.pygame.org/docs/) to create the GUI. You will need to install pygame module. Use the following code `pip install pygame`
+2. `BoardGui.py` - This code will help display the outcome of the sudoku game to a friendly GUI. I am using [Pygame](https://www.pygame.org/docs/) to create the GUI. 
 
-The sudoku table exists within this file. You may update the table to solve your specific sudoku problem. Place a "0"(zero) for any empty spots. 
-
-Once executed, it will send the table to `sudoku.py` to solve it. Once it is solved, the full table is returned and displayed in a GUI. 
+The sudoku table exists within this file. You may update the table to solve your specific sudoku problem. Place a "0"(zero) for any empty spots. Once it is solved, the full table is returned and displayed in a GUI. 
 
 Example below:
 
 ![BoardGui](./images/Sudoku_Solver_BoardGui.png)
+
+## How to run the code
+---
+* I use python3 to run this code
+* Make sure to have `pygame` module installed
+```
+pip3 install pygame
+```
+* To run the code type
+```
+python3 sudoku.py
+```
